@@ -7,11 +7,13 @@ ifdef linux
 tag = -n
 endif
 
-gtest.out: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o DBFile.o Pipe.o y.tab.o lex.yy.o gtest.o
-	$(CC) -o gtest.out Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o DBFile.o Pipe.o y.tab.o lex.yy.o gtest.o -ll -lpthread
-
-test: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o DBFile.o Pipe.o y.tab.o lex.yy.o test.o
-	$(CC) -o test Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o DBFile.o Pipe.o y.tab.o lex.yy.o test.o -ll -lpthread
+gtest: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o gtest-all.o gtest.o
+	$(CC) -o gtest Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o  DBFile.o Pipe.o y.tab.o lex.yy.o gtest-all.o gtest.o -ll -lpthread
+gtest-all.o: gtest-all.cc
+	$(CC)  -g -DGTEST_HAS_PTHREAD=0 -c gtest-all.cc
+#-DGTEST_HAS_PTHREAD=0
+test: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o test.o
+	$(CC) -o test Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o test.o -ll -lpthread
 
 a21test.out: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o DBFile.o Pipe.o y.tab.o lex.yy.o a2-1-test.o
 	$(CC) -o test.out Record.o Comparison.o ComparisonEngine.o Schema.o BigQ.o DBFile.o File.o Pipe.o y.tab.o lex.yy.o a2-1-test.o -ll -lpthread
@@ -19,8 +21,8 @@ a21test.out: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o DBF
 a1test.out: Record.o Comparison.o ComparisonEngine.o Schema.o File.o DBFile.o Pipe.o y.tab.o lex.yy.o a1-test.o
 	$(CC) -o a1test.out Record.o Comparison.o ComparisonEngine.o File.o DBFile.o y.tab.o lex.yy.o a1-test.o Schema.o -ll
 
-gtest.o: gtest.cc
-	$(CC) -g -c gtest.cc
+#gtest.o: gtest.cc
+#	$(CC) -g -c gtest.cc
 
 test.o: test.cc
 	$(CC) -g -c test.cc

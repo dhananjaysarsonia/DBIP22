@@ -40,6 +40,14 @@
 		D1728209240EA46C003AC9C2 /* test.h in Sources */ = {isa = PBXBuildFile; fileRef = D1A56C6B240ADE0E0000536B /* test.h */; };
 		D172820A240EA46C003AC9C2 /* TwoWayList.cc in Sources */ = {isa = PBXBuildFile; fileRef = D1A56C6C240ADE0E0000536B /* TwoWayList.cc */; };
 		D172820B240EA46C003AC9C2 /* TwoWayList.h in Sources */ = {isa = PBXBuildFile; fileRef = D1A56C74240ADE0E0000536B /* TwoWayList.h */; };
+		D172820E240EE48D003AC9C2 /* FileHandler.cc in Sources */ = {isa = PBXBuildFile; fileRef = D172820C240EE48D003AC9C2 /* FileHandler.cc */; };
+		D172820F240EE4F9003AC9C2 /* FileHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = D172820D240EE48D003AC9C2 /* FileHandler.h */; };
+		D1728212240EE5AF003AC9C2 /* HeapHandler.cc in Sources */ = {isa = PBXBuildFile; fileRef = D1728210240EE5AF003AC9C2 /* HeapHandler.cc */; };
+		D1728213240EE5CB003AC9C2 /* HeapHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = D1728211240EE5AF003AC9C2 /* HeapHandler.h */; };
+		D1728216240EE696003AC9C2 /* SortedFileHandler.cc in Sources */ = {isa = PBXBuildFile; fileRef = D1728214240EE696003AC9C2 /* SortedFileHandler.cc */; };
+		D1728219240EED62003AC9C2 /* gtest_main.cc in Sources */ = {isa = PBXBuildFile; fileRef = D1728217240EED62003AC9C2 /* gtest_main.cc */; };
+		D172821A240EED62003AC9C2 /* gtest-all.cc in Sources */ = {isa = PBXBuildFile; fileRef = D1728218240EED62003AC9C2 /* gtest-all.cc */; };
+		D172821B240EED6C003AC9C2 /* SortedFileHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = D1728215240EE696003AC9C2 /* SortedFileHandler.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +65,14 @@
 /* Begin PBXFileReference section */
 		D17281E5240EA45C003AC9C2 /* index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = index; sourceTree = BUILT_PRODUCTS_DIR; };
 		D17281E7240EA45C003AC9C2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D172820C240EE48D003AC9C2 /* FileHandler.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileHandler.cc; sourceTree = "<group>"; };
+		D172820D240EE48D003AC9C2 /* FileHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileHandler.h; sourceTree = "<group>"; };
+		D1728210240EE5AF003AC9C2 /* HeapHandler.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HeapHandler.cc; sourceTree = "<group>"; };
+		D1728211240EE5AF003AC9C2 /* HeapHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeapHandler.h; sourceTree = "<group>"; };
+		D1728214240EE696003AC9C2 /* SortedFileHandler.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SortedFileHandler.cc; sourceTree = "<group>"; };
+		D1728215240EE696003AC9C2 /* SortedFileHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SortedFileHandler.h; sourceTree = "<group>"; };
+		D1728217240EED62003AC9C2 /* gtest_main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gtest_main.cc; sourceTree = "<group>"; };
+		D1728218240EED62003AC9C2 /* gtest-all.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "gtest-all.cc"; sourceTree = "<group>"; };
 		D1A56C5D240ADE0E0000536B /* Lexer.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = Lexer.l; sourceTree = "<group>"; };
 		D1A56C5E240ADE0E0000536B /* gtest.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gtest.cc; sourceTree = "<group>"; };
 		D1A56C5F240ADE0E0000536B /* Comparison.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comparison.h; sourceTree = "<group>"; };
@@ -114,6 +130,14 @@
 		D1A56C52240ADDC80000536B = {
 			isa = PBXGroup;
 			children = (
+				D1728217240EED62003AC9C2 /* gtest_main.cc */,
+				D1728218240EED62003AC9C2 /* gtest-all.cc */,
+				D1728214240EE696003AC9C2 /* SortedFileHandler.cc */,
+				D1728215240EE696003AC9C2 /* SortedFileHandler.h */,
+				D1728210240EE5AF003AC9C2 /* HeapHandler.cc */,
+				D1728211240EE5AF003AC9C2 /* HeapHandler.h */,
+				D172820C240EE48D003AC9C2 /* FileHandler.cc */,
+				D172820D240EE48D003AC9C2 /* FileHandler.h */,
 				D1A56C65240ADE0E0000536B /* a1-test.cc */,
 				D1A56C63240ADE0E0000536B /* a1-test.h */,
 				D1A56C69240ADE0E0000536B /* a2-1-test.cc */,
@@ -173,7 +197,7 @@
 /* Begin PBXLegacyTarget section */
 		D1A56C57240ADDC80000536B /* MundusTry */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = test;
+			buildArgumentsString = gtest;
 			buildConfigurationList = D1A56C5A240ADDC80000536B /* Build configuration list for PBXLegacyTarget "MundusTry" */;
 			buildPhases = (
 			);
@@ -246,16 +270,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D172821B240EED6C003AC9C2 /* SortedFileHandler.h in Sources */,
+				D1728213240EE5CB003AC9C2 /* HeapHandler.h in Sources */,
+				D172820F240EE4F9003AC9C2 /* FileHandler.h in Sources */,
 				D17281EC240EA46C003AC9C2 /* a1-test.cc in Sources */,
 				D17281ED240EA46C003AC9C2 /* a1-test.h in Sources */,
 				D17281EE240EA46C003AC9C2 /* a2-1-test.cc in Sources */,
+				D172821A240EED62003AC9C2 /* gtest-all.cc in Sources */,
 				D17281EF240EA46C003AC9C2 /* a2-1-test.h in Sources */,
 				D17281F0240EA46C003AC9C2 /* BigQ.cc in Sources */,
+				D1728216240EE696003AC9C2 /* SortedFileHandler.cc in Sources */,
 				D17281F1240EA46C003AC9C2 /* BigQ.h in Sources */,
 				D17281F2240EA46C003AC9C2 /* catalog in Sources */,
+				D1728212240EE5AF003AC9C2 /* HeapHandler.cc in Sources */,
 				D17281F3240EA46C003AC9C2 /* Comparison.cc in Sources */,
 				D17281F4240EA46C003AC9C2 /* Comparison.h in Sources */,
 				D17281F5240EA46C003AC9C2 /* ComparisonEngine.cc in Sources */,
+				D1728219240EED62003AC9C2 /* gtest_main.cc in Sources */,
 				D17281F6240EA46C003AC9C2 /* ComparisonEngine.h in Sources */,
 				D17281F7240EA46C003AC9C2 /* DBFile.cc in Sources */,
 				D17281F8240EA46C003AC9C2 /* DBFile.h in Sources */,
@@ -278,6 +309,7 @@
 				D1728209240EA46C003AC9C2 /* test.h in Sources */,
 				D172820A240EA46C003AC9C2 /* TwoWayList.cc in Sources */,
 				D172820B240EA46C003AC9C2 /* TwoWayList.h in Sources */,
+				D172820E240EE48D003AC9C2 /* FileHandler.cc in Sources */,
 				D17281E8240EA45C003AC9C2 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
