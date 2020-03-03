@@ -7,13 +7,13 @@ ifdef linux
 tag = -n
 endif
 
-gtest: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o gtest-all.o gtest.o
-	$(CC) -o gtest Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o  DBFile.o Pipe.o y.tab.o lex.yy.o gtest-all.o gtest.o -ll -lpthread
+gtest: Record.o Comparison.o ComparisonEngine.o Schema.o File.o Run.o RecordComparator.o RunComparator.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o gtest-all.o gtest.o
+	$(CC) -o gtest Record.o Comparison.o ComparisonEngine.o Schema.o File.o Run.o RecordComparator.o RunComparator.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o  DBFile.o Pipe.o y.tab.o lex.yy.o gtest-all.o gtest.o -ll -lpthread
 gtest-all.o: gtest-all.cc
 	$(CC)  -g -DGTEST_HAS_PTHREAD=0 -c gtest-all.cc
 #-DGTEST_HAS_PTHREAD=0
-test: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o test.o
-	$(CC) -o test Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o test.o -ll -lpthread
+test: Record.o Comparison.o ComparisonEngine.o Schema.o File.o Run.o RecordComparator.o RunComparator.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o test.o
+	$(CC) -o test Record.o Comparison.o ComparisonEngine.o Schema.o File.o Run.o RecordComparator.o RunComparator.o BigQ.o FileHandler.o HeapHandler.o SortedFileHandler.o DBFile.o Pipe.o y.tab.o lex.yy.o test.o -ll -lpthread
 
 a21test.out: Record.o Comparison.o ComparisonEngine.o Schema.o File.o BigQ.o DBFile.o Pipe.o y.tab.o lex.yy.o a2-1-test.o
 	$(CC) -o test.out Record.o Comparison.o ComparisonEngine.o Schema.o BigQ.o DBFile.o File.o Pipe.o y.tab.o lex.yy.o a2-1-test.o -ll -lpthread

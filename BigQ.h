@@ -8,61 +8,11 @@
 #include "Pipe.h"
 #include "File.h"
 #include "Record.h"
+#include "Run.h"
+#include "RecordComparator.h"
+#include "RunComparator.h"
 
 using namespace std;
-
-class RecordComparator {
-	
-private:
-	
-	OrderMaker *sortorder;
-    
-	
-public:
-	
-	RecordComparator (OrderMaker *order);
-	bool operator() (Record* left, Record* right);
-	
-};
-
-
-class Run {
-	
-private:
-	
-	Page currentPage;
-	
-public:
-	
-	Record* currentRecord;
-    OrderMaker* sortedOrder;
-    File *runsFile;
-	
-    int pOffset;
-    int runSize;
-	
-	Run (int runSize, int pageOffset, File *file, OrderMaker *order);
-	Run (File *file, OrderMaker *order);
-    ~Run();
-    
-    int GetFirstRecord();
-	
-};
-
-class RunComparator {
-	
-private:
-	
-    OrderMaker *sortorder;
-	
-public:
-	
-    bool operator() (Run* left, Run* right);
-	
-}; 
-
-
-
 class BigQ {
 
 private:
