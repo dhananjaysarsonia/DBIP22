@@ -15,7 +15,7 @@ class Comparison {
 	friend class ComparisonEngine;
 	friend class CNF;
 	
-	friend class Sorted;
+	friend class SortedFileHandler;
 	
 	Target operand1;
 	int whichAtt1;
@@ -47,7 +47,7 @@ class OrderMaker {
 	friend class CNF;
 	
 	friend class DBFile;
-	friend class Sorted;
+	friend class SortedFileHandler;
 
 	int numAtts;
 
@@ -79,7 +79,7 @@ class CNF {
 
 	friend class ComparisonEngine;
 	
-	friend class Sorted;
+	friend class SortedFileHandler;
 
 	Comparison orList[MAX_ANDS][MAX_ORS];
 	

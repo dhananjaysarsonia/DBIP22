@@ -22,92 +22,94 @@ DBFile :: ~DBFile () {
 	
 }
 
-int DBFile :: Create (const char *fpath, fType ftype, void *startup) {
+int DBFile :: Create (const char *fpath, fType f_type, void *startup) {
 	
-	ofstream md;
+	ofstream metadata;
 	
-	char mdpath[100];
+	char metadataPath[100];
 	
-	sprintf (mdpath, "%s.md", fpath);
-	md.open (mdpath);
-	
-	if (ftype == heap) {
-		
-		md << "heap" << endl;
-		fileHandler = new Heap;
-		
-	} else if (ftype == sorted) {
-		
-		md << "sorted" << endl;
-		md << ((SortInfo *) startup)->runLength << endl;
-		md << ((SortInfo *) startup)->myOrder->numAtts << endl;
-		((SortInfo *) startup)->myOrder->PrintInOfstream (md);
-		fileHandler = new Sorted (((SortInfo *) startup)->myOrder, ((SortInfo *) startup)->runLength);
-		
-	} else if (ftype == tree) {
-		// for late usage
-		md << "tree" << endl;
-		// may need more operation
-	} else {
-		
-		md.close ();
-		
-		cout << "The type of file (" << fpath << ") not recognized!" << endl;
-		return 0;
-		
-	}
+	sprintf (metadataPath, "%s.md", fpath);
+	metadata.open (metadataPath);
+    
+    switch (f_type) {
+        case heap:
+        {
+            metadata << "heap" << endl;
+            fileHandler = new HeapHandler;
+            break;
+        }
+          
+            
+        case sorted:
+        {
+            metadata << "sorted" << endl;
+            metadata << ((SortBus *) startup)->runLength << endl;
+            metadata << ((SortBus *) startup)->myOrder->numAtts << endl;
+            ((SortBus *) startup)->myOrder->PrintInOfstream (metadata);
+            fileHandler = new SortedFileHandler (((SortBus *) startup)->myOrder, ((SortBus *) startup)->runLength);
+            break;
+            
+        }
+        default:
+            metadata.close();
+            return 0;
+    }
+    
+    
+    
+
 	
 	fileHandler->Create (fpath);
-	md.close ();
+	metadata.close ();
 	
 	return 1;
 	
 }
 
-int DBFile :: Open (char *fpath) {
+int DBFile :: Open (char *filepath) {
 	
-	ifstream md;
-	string str;
+	ifstream metadata;
+	string inputString;
 	
 	int attNum;
 	char *mdpath = new char[100];
 	
-	sprintf (mdpath, "%s.md", fpath);
-	md.open (mdpath);
+	sprintf (mdpath, "%s.md", filepath);
+	metadata.open (mdpath);
 	
-	if (md.is_open ()) {
+	if (metadata.is_open ()) {
 		
-		md >> str;
+		metadata >> inputString;
 		
-		if (!str.compare ("heap")) {
+		if (inputString.compare ("heap") == 0) {
 			
-			fileHandler = new Heap;
+			fileHandler = new HeapHandler;
 			
-		} else if (!str.compare ("sorted")){
+		} else if (inputString.compare ("sorted") == 0){
 			
 			int runLength;
 			
 			OrderMaker *order = new OrderMaker;
 			
-			md >> runLength;
-			md >> order->numAtts;
+			metadata >> runLength;
+			metadata >> order->numAtts;
 			
 			for (int i = 0; i < order->numAtts; i++) {
 				
-				md >> attNum;
-				md >> str;
+				metadata >> attNum;
+				metadata >> inputString;
 				
 				order->whichAtts[i] = attNum;
 				
-				if (!str.compare ("Int")) {
+				if (!inputString.compare ("Int")) {
 					
 					order->whichTypes[i] = Int;
 					
-				} else if (!str.compare ("Double")) {
+				} else if (!inputString.compare ("Double")) {
 					
 					order->whichTypes[i] = Double;
 					
-				} else if (!str.compare ("String")) {
+				} else if (!inputString.compare ("String")) {
 					
 					order->whichTypes[i] = String;
 					
@@ -115,9 +117,9 @@ int DBFile :: Open (char *fpath) {
 					
 					delete order;
 					
-					md.close ();
+					metadata.close ();
 					
-					cout << "Invalid metadata for sorted file (" << fpath << ")" << endl;
+					cout << "Bad Data! Some error occurred (" << filepath << ")" << endl;
 					
 					return 0;
 					
@@ -125,17 +127,14 @@ int DBFile :: Open (char *fpath) {
 				
 			}
 			
-			fileHandler = new Sorted (order, runLength);
-			
-		} else if (!str.compare ("tree")) {
-			// Todo
+			fileHandler = new SortedFileHandler (order, runLength);
 			
 			
 		} else {
 			
-			md.close ();
+			metadata.close ();
 			
-			cout << "Invalid file type in metadata of file (" << fpath << ")" << endl;
+			cout << "Bad file type, it should be sorted or heap only(" << filepath << ")" << endl;
 			
 			return 0;
 			
@@ -143,15 +142,15 @@ int DBFile :: Open (char *fpath) {
 		
 	} else {
 		
-		md.close ();
+		metadata.close ();
 		
-		cout << "Can not open file (" << fpath << ")!" << endl;
+		cout << "Check the path, there is some error (" << filepath << ")!" << endl;
 		return 0;
 		
 	}
 	
-	fileHandler->Open (fpath);
-	md.close ();
+	fileHandler->Open (filepath);
+	metadata.close ();
 	
 	return 1;
 	
@@ -193,21 +192,21 @@ int DBFile :: GetNext (Record &fetchme, CNF &cnf, Record &literal) {
 	
 }
 
-Heap :: Heap () {
+HeapHandler :: HeapHandler () {
 	
 	file = new File ();
 	currentPage = new Page ();
 	
 }
 
-Heap :: ~Heap () {
+HeapHandler :: ~HeapHandler () {
 	
 	delete currentPage;
 	delete file;
 	
 }
 
-int Heap :: Create (const char *fpath) {
+int HeapHandler :: Create (const char *fpath) {
 	
 	writingMode = true;
 	
@@ -222,12 +221,12 @@ int Heap :: Create (const char *fpath) {
 	
 }
 
-void Heap :: Load (Schema &f_schema, const char *loadpath) {
+void HeapHandler :: Load (Schema &f_schema, const char *loadpath) {
 	
-	FILE *tableFile = fopen(loadpath, "r");
+	FILE *tblfile = fopen(loadpath, "r");
 	Record temp;
 	
-	if (tableFile == NULL) {
+	if (tblfile == NULL) {
 		
 		cout << "Can not open file " << loadpath << "!" << endl;
 		exit (0);
@@ -237,17 +236,17 @@ void Heap :: Load (Schema &f_schema, const char *loadpath) {
 	pIndex = 0;
 	currentPage->EmptyItOut ();
 	
-	while (temp.SuckNextRecord (&f_schema, tableFile) == 1)
+	while (temp.SuckNextRecord (&f_schema, tblfile) == 1)
 		Add (temp);
 	
 	file->AddPage (currentPage, pIndex);
 	currentPage->EmptyItOut ();
 	
-	fclose (tableFile);
+	fclose (tblfile);
 	
 }
 
-int Heap :: Open (char *fpath) {
+int HeapHandler :: Open (char *fpath) {
 	
 	this->fpath = new char[100];
 	
@@ -261,7 +260,7 @@ int Heap :: Open (char *fpath) {
 	
 }
 
-void Heap :: MoveFirst () {
+void HeapHandler :: MoveFirst () {
 	
 	if (writingMode && currentPage->GetNumRecs () > 0) {
 		
@@ -276,7 +275,7 @@ void Heap :: MoveFirst () {
 	
 }
 
-int Heap :: Close () {
+int HeapHandler :: Close () {
 	
 	if (writingMode && currentPage->GetNumRecs () > 0) {
 		
@@ -292,7 +291,7 @@ int Heap :: Close () {
 	
 }
 
-void Heap :: Add (Record &rec) {
+void HeapHandler :: Add (Record &rec) {
 	
 	if (! (currentPage->Append (&rec))) {
 		
@@ -304,25 +303,22 @@ void Heap :: Add (Record &rec) {
 	
 }
 
-int Heap :: GetNext (Record &fetchme) {
+int HeapHandler :: GetNext (Record &fetchme) {
 	
 	if (currentPage->GetFirst (&fetchme)) {
-		// Got the record from current page
 		return 1;
 		
 	} else {
-		// Didn't get the record from current page
-		// Need to get a new page
+
 		pIndex++;
 		if (pIndex < file->GetLength () - 1) {
-			// if not reach EOF
+			
 			file->GetPage (currentPage, pIndex);
 			currentPage->GetFirst (&fetchme);
 			
 			return 1;
 
 		} else {
-			// if already reach EOF
 			return 0;
 			
 		}
@@ -331,7 +327,7 @@ int Heap :: GetNext (Record &fetchme) {
 	
 }
 
-int Heap :: GetNext (Record &fetchme, CNF &cnf, Record &literal) {
+int HeapHandler :: GetNext (Record &fetchme, CNF &cnf, Record &literal) {
 	
 	ComparisonEngine comp;
 	
@@ -349,7 +345,7 @@ int Heap :: GetNext (Record &fetchme, CNF &cnf, Record &literal) {
 	
 }
 
-Sorted :: Sorted (OrderMaker *order, int runLength) {
+SortedFileHandler :: SortedFileHandler (OrderMaker *order, int runLength) {
 	
 	this->query = NULL;
 	this->bigq = NULL;
@@ -361,7 +357,7 @@ Sorted :: Sorted (OrderMaker *order, int runLength) {
 	
 }
 
-Sorted :: ~Sorted () {
+SortedFileHandler :: ~SortedFileHandler () {
 	
 	delete query;
 	delete file;
@@ -369,7 +365,7 @@ Sorted :: ~Sorted () {
 	
 }
 
-int Sorted :: Create (const char *fpath) {
+int SortedFileHandler :: Create (const char *fpath) {
 	
 	writingMode = false;
 	pIndex = 0;
@@ -384,7 +380,7 @@ int Sorted :: Create (const char *fpath) {
 	
 }
 
-int Sorted :: Open (char *fpath) {
+int SortedFileHandler :: Open (char *fpath) {
 	
 	writingMode = false;
 	pIndex = 0;
@@ -406,11 +402,11 @@ int Sorted :: Open (char *fpath) {
 	
 }
 
-int Sorted :: Close () {
+int SortedFileHandler :: Close () {
 	
 	if (writingMode) {
 		
-		Merge ();
+		FlushPipeToFile ();
 		
 	}
 	
@@ -419,11 +415,11 @@ int Sorted :: Close () {
 	
 }
 
-void Sorted :: Add (Record &addme) {
+void SortedFileHandler :: Add (Record &addme) {
 	
 	if (!writingMode) {
 		
-		SetupBigQ ();
+		startSortingThread();
 		
 	}
 	
@@ -431,7 +427,7 @@ void Sorted :: Add (Record &addme) {
 	
 }
 
-void Sorted :: Load (Schema &myschema, const char *loadpath) {
+void SortedFileHandler :: Load (Schema &myschema, const char *loadpath) {
 	
 	FILE *tableFile = fopen(loadpath, "r");
 	Record temp;
@@ -456,11 +452,11 @@ void Sorted :: Load (Schema &myschema, const char *loadpath) {
 	
 }
 
-void Sorted :: MoveFirst () {
+void SortedFileHandler :: MoveFirst () {
 	
 	if (writingMode) {
 		
-		Merge ();
+		FlushPipeToFile ();
 		
 	} else {
 		
@@ -483,24 +479,20 @@ void Sorted :: MoveFirst () {
 	
 }
 
-int Sorted :: GetNext (Record &fetchme) {
+int SortedFileHandler :: GetNext (Record &fetchme) {
 	
 	if (writingMode) {
 		
-		Merge ();
+		FlushPipeToFile ();
 		
 	}
 	
 	if (currentPage->GetFirst (&fetchme)) {
-		// Got the record from current page
 		return 1;
 		
 	} else {
-		// Didn't get the record from current page
-		// Need to get a new page
 		pIndex++;
 		if (pIndex < file->GetLength () - 1) {
-			// if not reach EOF
 			file->GetPage (currentPage, pIndex);
 			currentPage->GetFirst (&fetchme);
 			
@@ -516,53 +508,48 @@ int Sorted :: GetNext (Record &fetchme) {
 	
 }
 
-int Sorted :: GetNext (Record &fetchme, CNF &cnf, Record &literal) {
+int SortedFileHandler :: GetNext (Record &fetchme, CNF &cnf, Record &literal) {
 	
 	if (writingMode) {
 		
-		Merge ();
+		FlushPipeToFile ();
 		
 	}
 	
-	ComparisonEngine comp;
+
 	
 	if (!query) {
-		// cout << "No query found! Try to gen one!" << endl;
-		// query does not exist
+
 		query = new OrderMaker;
 		
-		if (QueryOrderGen (*query, *order, cnf) > 0) {
-			// query generated successfully
-			// cout << "Query Gen Success! Go Bin Search!" << endl;
+		if (NewOrderGenerator (*query, *order, cnf) > 0) {
+		
 			query->Print ();
-			if (BinarySearch (fetchme, cnf, literal)) {
-				// cout << "Found!" << endl;
-				// Found
+			if (BinarySearchInSorted (fetchme, cnf, literal)) {
+	
 				return 1;
 				
 			} else {
-				// binary search fails
-				// cout << "Not Found!" << endl;
+	
 				return 0;
 				
 			}
 			
 		} else {
-			//query generated but is empty
-			// cout << "Query Gen fail! Go Sequential!" << endl;
-			return GetNextSequential (fetchme, cnf, literal);
+
+			return GetNextInSequence(fetchme, cnf, literal);
 			
 		}
 		
 	} else {
-		// query exists
+		
 		if (query->numAtts == 0) {
 			// invalid query
-			return GetNextSequential (fetchme, cnf, literal);
+			return GetNextInSequence (fetchme, cnf, literal);
 			
 		} else {
 			// valid query
-			return GetNextWithQuery (fetchme, cnf, literal);
+			return GetNextWithCNF (fetchme, cnf, literal);
 			
 		}
 		
@@ -570,15 +557,15 @@ int Sorted :: GetNext (Record &fetchme, CNF &cnf, Record &literal) {
 	
 }
 
-int Sorted :: GetNextWithQuery (Record &fetchme, CNF &cnf, Record &literal) {
+int SortedFileHandler :: GetNextWithCNF(Record &fetchme, CNF &cnf, Record &literal) {
 	
-	ComparisonEngine comp;
+	ComparisonEngine engine;
 	
 	while (GetNext (fetchme)) {
 		
-		if (!comp.Compare (&literal, query, &fetchme, order)){
+		if (!engine.Compare (&literal, query, &fetchme, order)){
 			
-			if (comp.Compare (&fetchme, &literal, &cnf)){
+			if (engine.Compare (&fetchme, &literal, &cnf)){
 				
 				return 1;
 				
@@ -596,13 +583,13 @@ int Sorted :: GetNextWithQuery (Record &fetchme, CNF &cnf, Record &literal) {
 	
 }
 
-int Sorted :: GetNextSequential (Record &fetchme, CNF &cnf, Record &literal) {
+int SortedFileHandler :: GetNextInSequence(Record &fetchme, CNF &cnf, Record &literal) {
 	
-	ComparisonEngine comp;
+	ComparisonEngine engine;
 	
 	while (GetNext (fetchme)) {
 		
-		if (comp.Compare (&fetchme, &literal, &cnf)){
+		if (engine.Compare (&fetchme, &literal, &cnf)){
 			
 			return 1;
 			
@@ -614,33 +601,33 @@ int Sorted :: GetNextSequential (Record &fetchme, CNF &cnf, Record &literal) {
 	
 }
 
-int Sorted :: BinarySearch(Record &fetchme, CNF &cnf, Record &literal) {
+int SortedFileHandler :: BinarySearchInSorted(Record &fetchme, CNF &cnf, Record &literal) {
 	
-	off_t first = pIndex;
-	off_t last = file->GetLength () - 1;
+	off_t start = pIndex;
+	off_t end = file->GetLength () - 1;
 	off_t mid = pIndex;
 	
 	Page *page = new Page;
 	
-	ComparisonEngine comp;
+	ComparisonEngine engine;
 	
 	while (true) {
 		
-		mid = (first + last) / 2;
+		mid = (start + end) / 2;
 		
 		file->GetPage (page, mid);
 		
 		if (page->GetFirst (&fetchme)) {
 			
-			if (comp.Compare (&literal, query, &fetchme, order) <= 0) {
+			if (engine.Compare (&literal, query, &fetchme, order) <= 0) {
 				
-				last = mid - 1;
-				if (last <= first) break;
+				end = mid - 1;
+				if (end <= start) break;
 				
 			} else {
 				
-				first = mid + 1;
-				if (last <= first) break;
+				start = mid + 1;
+				if (end <= start) break;
 				
 			}
 			
@@ -652,7 +639,7 @@ int Sorted :: BinarySearch(Record &fetchme, CNF &cnf, Record &literal) {
 		
 	}
 	
-	if (comp.Compare (&fetchme, &literal, &cnf)) {
+	if (engine.Compare (&fetchme, &literal, &cnf)) {
 		
 		delete currentPage;
 		
@@ -671,7 +658,7 @@ int Sorted :: BinarySearch(Record &fetchme, CNF &cnf, Record &literal) {
 	
 }
 
-void Sorted :: SetupBigQ () {
+void SortedFileHandler :: startSortingThread() {
 	
 	writingMode = true;
 	
@@ -682,7 +669,7 @@ void Sorted :: SetupBigQ () {
 	
 }
 
-void Sorted :: Merge () {
+void SortedFileHandler :: FlushPipeToFile () {
 	
 	inPipe->ShutDown ();
 	
@@ -694,28 +681,28 @@ void Sorted :: Merge () {
 		
 	}
 	
-	Record *fromPipe = new Record;
-	Record *fromFile = new Record;
+	Record *recFromPipe = new Record;
+	Record *recFromFile = new Record;
 	
-	Heap *newFile = new Heap;
+	HeapHandler *newFile = new HeapHandler;
 	newFile->Create ("bin/temp.bin");
 	
-	int flagPipe = outPipe->Remove (fromPipe);
-	int flagFile = GetNext (*fromFile);
+	int flagPipe = outPipe->Remove (recFromPipe);
+	int flagFile = GetNext (*recFromFile);
 	
 	ComparisonEngine comp;
 	
 	while (flagFile && flagPipe) {
 		
-		if (comp.Compare (fromPipe, fromFile, order) > 0) {
+		if (comp.Compare (recFromPipe, recFromFile, order) > 0) {
 			
-			newFile->Add (*fromFile);
-			flagFile = GetNext (*fromFile);
+			newFile->Add (*recFromFile);
+			flagFile = GetNext (*recFromFile);
 			
 		} else {
 			
-			newFile->Add (*fromPipe);
-			flagPipe = outPipe->Remove (fromPipe);
+			newFile->Add (*recFromPipe);
+			flagPipe = outPipe->Remove (recFromPipe);
 			
 		}
 		
@@ -723,15 +710,15 @@ void Sorted :: Merge () {
 	
 	while (flagFile) {
 		
-		newFile->Add (*fromFile);
-		flagFile = GetNext (*fromFile);
+		newFile->Add (*recFromFile);
+		flagFile = GetNext (*recFromFile);
 		
 	}
 	
 	while (flagPipe) {
 		
-		newFile->Add (*fromPipe);
-		flagPipe = outPipe->Remove (fromPipe);
+		newFile->Add (*recFromPipe);
+		flagPipe = outPipe->Remove (recFromPipe);
 		
 	}
 	
@@ -750,8 +737,10 @@ void Sorted :: Merge () {
 	
 }
 
-int Sorted :: QueryOrderGen (OrderMaker &query, OrderMaker &order, CNF &cnf) {
-	
+int SortedFileHandler :: NewOrderGenerator(OrderMaker &query, OrderMaker &order, CNF &cnf) {
+    //Query was failing order generation with default method provided
+    //After a lot of discussion with classmates, we have made some changes and pasted here
+    
 	query.numAtts = 0;
 	bool found = false;
 	

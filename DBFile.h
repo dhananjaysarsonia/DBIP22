@@ -16,8 +16,9 @@ typedef enum {
 	tree
 } fType;
 
-struct SortInfo {
-	
+class SortBus {
+public:
+    
 	OrderMaker *myOrder;
 	int runLength;
 	
@@ -52,12 +53,12 @@ public:
 	
 };
 
-class Heap : public FileHandler {
+class HeapHandler : public FileHandler {
 
 public:
 	
-	Heap ();
-	~Heap ();
+	HeapHandler ();
+	~HeapHandler ();
 	
 	int Create (const char *fpath);
 	int Open (char *fpath);
@@ -72,24 +73,24 @@ public:
 
 };
 
-class Sorted : public FileHandler {
+class SortedFileHandler : public FileHandler {
 
 private:
 	
-	OrderMaker *order;               // The order of the records in this file
+	OrderMaker *order;
 	OrderMaker *query;
 	
-	BigQ *bigq;                      // Internal BigQ Strutre
-	Pipe *inPipe, *outPipe;          // Internal Pipes to input and output for the
-                                     // BigQ Strutre 
+	BigQ *bigq;
+	Pipe *inPipe, *outPipe;
+                                     
 	
-	int runLength;                   // The length of every run in the BigQ structure
-	int buffsize;                    // The buffer size of Pipes
+	int runLength;
+	int buffsize;
 
 public:
 	
-	Sorted (OrderMaker *order, int runLength);
-	~Sorted ();
+	SortedFileHandler (OrderMaker *order, int runLength);
+	~SortedFileHandler ();
 	
 	int Create (const char *fpath);
 	int Open (char *fpath);
@@ -102,27 +103,17 @@ public:
 	int GetNext (Record &fetchme);
 	int GetNext (Record &fetchme, CNF &cnf, Record &literal);
 	
-	// Get next function when query exist and valid
-	int GetNextWithQuery (Record &fetchme, CNF &cnf, Record &literal);
+	int GetNextWithCNF (Record &fetchme, CNF &cnf, Record &literal);
 	
-	// Get next function when query is not valid
-	int GetNextSequential (Record &fetchme, CNF &cnf, Record &literal);
+	int GetNextInSequence (Record &fetchme, CNF &cnf, Record &literal);
 	
-	// Binary Search after query is successfully generated
-	// return 0 or 1, representing found or not found
-	int BinarySearch(Record &fetchme, CNF &cnf, Record &literal);
+	int BinarySearchInSorted(Record &fetchme, CNF &cnf, Record &literal);
 	
-	// Set up the Internal BigQ for Records to add
-	void SetupBigQ ();
+	void startSortingThread ();
 	
-	// Merge the records in the internal BigQ with
-	// others already in the file. After merging, 
-	// the pointer is at the start of the file.
-	void Merge ();
+	void FlushPipeToFile ();
 	
-	// Generate the query OrderMaker. Return 0 or 1,
-	// representing generation success or failure.
-	int QueryOrderGen (OrderMaker &query, OrderMaker &order, CNF &cnf);
+	int NewOrderGenerator (OrderMaker &query, OrderMaker &order, CNF &cnf);
 	
 };
 
@@ -130,15 +121,13 @@ class DBFile {
 	
 private:
 	
-	FileHandler *fileHandler;         // The DB file pointer
+	FileHandler *fileHandler;         
 
 public:
 	
 	DBFile ();
 	~DBFile ();
 	
-	// Create a new DBFile instance, return 1 for success and 
-	// 0 for failure
 	int Create (const char *fpath, fType ftype, void *startup);
 	int Open (char *fpath);
 	int Close ();
