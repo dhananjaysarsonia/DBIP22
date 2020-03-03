@@ -70,7 +70,7 @@ void test1 () {
                 cout << "\n\t added " << proc << " recs..so far " << tot << endl;
         }
         else {
-            test3 ();
+            //test3 ();
         }
     }
     cout << "\n create finished.. " << tot << " recs inserted\n";

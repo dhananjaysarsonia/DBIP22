@@ -15,17 +15,20 @@
 
 
 class SortedFileHandler : public FileHandler {
-
+//this class extends filehandler and sorts the elements
 private:
-    
+    //used to sort the order
     OrderMaker *order;
+    //used to query the records later
     OrderMaker *query;
-    
+    //bigq object to perform operations related to sorted file. Like before we will work with pipes through this
     BigQ *bigq;
+    //input and output pipe to fetch and feed data
     Pipe *inPipe, *outPipe;
                                      
-    
+    //size of the Runs in pages
     int runLength;
+    //size of the pipes
     int buffsize;
 
 public:

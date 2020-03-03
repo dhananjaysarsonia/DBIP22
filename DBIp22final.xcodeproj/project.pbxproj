@@ -54,6 +54,7 @@
 		D1728223240EF38A003AC9C2 /* RecordComparator.h in Sources */ = {isa = PBXBuildFile; fileRef = D172821D240EF204003AC9C2 /* RecordComparator.h */; };
 		D1728226240EF4EF003AC9C2 /* RunComparator.cc in Sources */ = {isa = PBXBuildFile; fileRef = D1728224240EF4EF003AC9C2 /* RunComparator.cc */; };
 		D1728227240EF50B003AC9C2 /* RunComparator.h in Sources */ = {isa = PBXBuildFile; fileRef = D1728225240EF4EF003AC9C2 /* RunComparator.h */; };
+		D172822B240F03F7003AC9C2 /* Global.cc in Sources */ = {isa = PBXBuildFile; fileRef = D1728228240F03F6003AC9C2 /* Global.cc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -85,6 +86,9 @@
 		D1728220240EF35A003AC9C2 /* Run.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Run.h; sourceTree = "<group>"; };
 		D1728224240EF4EF003AC9C2 /* RunComparator.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RunComparator.cc; sourceTree = "<group>"; };
 		D1728225240EF4EF003AC9C2 /* RunComparator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RunComparator.h; sourceTree = "<group>"; };
+		D1728228240F03F6003AC9C2 /* Global.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Global.cc; sourceTree = "<group>"; };
+		D1728229240F03F6003AC9C2 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
+		D172822A240F03F6003AC9C2 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		D1A56C5D240ADE0E0000536B /* Lexer.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = Lexer.l; sourceTree = "<group>"; };
 		D1A56C5E240ADE0E0000536B /* gtest.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gtest.cc; sourceTree = "<group>"; };
 		D1A56C5F240ADE0E0000536B /* Comparison.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comparison.h; sourceTree = "<group>"; };
@@ -172,6 +176,9 @@
 				D1A56C6F240ADE0E0000536B /* Defs.h */,
 				D1A56C68240ADE0E0000536B /* File.cc */,
 				D1A56C62240ADE0E0000536B /* File.h */,
+				D1728228240F03F6003AC9C2 /* Global.cc */,
+				D172822A240F03F6003AC9C2 /* Global.h */,
+				D1728229240F03F6003AC9C2 /* Util.h */,
 				D1A56C5E240ADE0E0000536B /* gtest.cc */,
 				D1A56C5D240ADE0E0000536B /* Lexer.l */,
 				D1A56C7C240ADE0E0000536B /* Makefile */,
@@ -334,6 +341,7 @@
 				D172820A240EA46C003AC9C2 /* TwoWayList.cc in Sources */,
 				D172820B240EA46C003AC9C2 /* TwoWayList.h in Sources */,
 				D172820E240EE48D003AC9C2 /* FileHandler.cc in Sources */,
+				D172822B240F03F7003AC9C2 /* Global.cc in Sources */,
 				D17281E8240EA45C003AC9C2 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
